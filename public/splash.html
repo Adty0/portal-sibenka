@@ -609,7 +609,7 @@
     <video 
       id="splash-video" 
       class="fullscreen-video" 
-      src="http://127.0.0.1:8000/video/splash_video.mp4" 
+      src="video/splash_video.mp4" 
       autoplay 
       loop 
       playsinline
@@ -663,7 +663,7 @@
         <div class="action-card card-blue" onclick="bukaWebsiteSibenka()">
           <div>
             <div class="card-icon-wrapper" style="background: #ffffff; border: 2px solid rgba(56, 189, 248, 0.5); padding: 6px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.3);">
-              <img src="http://127.0.0.1:8000/images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 100%; height: 100%; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+              <img src="images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 100%; height: 100%; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
             </div>
             <h2 class="card-title">SIBENKA</h2>
             <p class="card-desc">
@@ -775,7 +775,7 @@
       <div class="modal-header">
         <div class="modal-header-info">
           <div class="modal-header-icon" style="display: flex; align-items: center;">
-            <img src="http://127.0.0.1:8000/images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+            <img src="images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
           </div>
           <span class="modal-header-title">SIBENKA - SMKN 3 Yogyakarta</span>
         </div>
@@ -821,7 +821,9 @@
     const modalWebsite = document.getElementById('modal-website');
     const websiteIframe = document.getElementById('website-iframe');
 
-    const SIBENKA_EMBED_URL = "http://127.0.0.1:8000/sibenka-frame";
+    const SIBENKA_EMBED_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
+      ? "/sibenka-frame" 
+      : "https://sibenka-skagata.onrender.com/login";
     const SIBENKA_EXTERNAL_URL = 'https://sibenka-skagata.onrender.com/login';
     const DOKUMEN_PERANCANGAN_URL = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing';
 
