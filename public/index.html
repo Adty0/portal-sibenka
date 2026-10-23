@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SISTEM SIBENKA - Projek Kepemimpinan</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #38bdf8;
+      --primary-glow: rgba(56, 189, 248, 0.45);
+      --secondary: #818cf8;
+      --bg-dark: #030712;
+      --bg-card: rgba(15, 23, 42, 0.8);
+      --border-card: rgba(255, 255, 255, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    /* ============================================================
+       LAYER ANIMASI VIDEO LAYAR PENUH
+       ============================================================ */
+    #video-splash-screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10;
+      background: #000000;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    #video-splash-screen.hidden {
+      opacity: 0;
+      transform: scale(0.96);
+      pointer-events: none;
+    }
+
+    .fullscreen-video {
+      position: absolute;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover; /* Full layar monitor tanpa sisa */
+      object-position: center center;
+      display: block;
+      background: #000;
+      pointer-events: none; /* Cegah browser default click-to-pause */
+    }
+
+    /* Ambient Video Overlay untuk Kedalaman */
+    .video-ambient-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at center, transparent 60%, rgba(3, 7, 18, 0.45) 100%);
+      z-index: 2;
+    }
+
+    /* ============================================================
+       HALAMAN MENU UTAMA (FUTURISTIK DENGAN 2 BUTTON)
+       ============================================================ */
+    #menu-screen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at 50% 20%, #1e1b4b 0%, #0c0f1d 45%, #05070d 100%);
+      opacity: 0;
+      transform: scale(0.96);
+      pointer-events: none;
+      transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 24px;
+    }
+
+    #menu-screen.active {
+      opacity: 1;
+      transform: scale(1);
+      pointer-events: auto;
+    }
+
+    .menu-content {
+      position: relative;
+      z-index: 5;
+      max-width: 960px;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .menu-header {
+      margin-bottom: 36px;
+    }
+
+    .menu-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 16px;
+      border-radius: 999px;
+      background: rgba(129, 140, 248, 0.15);
+      border: 1px solid rgba(129, 140, 248, 0.35);
+      color: #a5b4fc;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .menu-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 45%, #818cf8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .menu-subtitle {
+      font-size: 1rem;
+      color: var(--text-muted);
+      max-width: 580px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* 2 Main Action Cards */
+    .menu-actions-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      width: 100%;
+      margin-bottom: 36px;
+    }
+
+    .action-card {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: 20px;
+      padding: 30px 26px;
+      text-align: left;
+      cursor: pointer;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .action-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--card-color, #38bdf8), transparent);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .action-card:hover {
+      transform: translateY(-6px);
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 25px var(--card-glow, rgba(56, 189, 248, 0.35));
+    }
+
+    .action-card:hover::before {
+      opacity: 1;
+    }
+
+    .action-card.card-blue {
+      --card-color: #38bdf8;
+      --card-glow: rgba(56, 189, 248, 0.35);
+    }
+
+    .action-card.card-indigo {
+      --card-color: #818cf8;
+      --card-glow: rgba(129, 140, 248, 0.35);
+    }
+
+    .card-icon-wrapper {
+      width: 60px;
+      height: 60px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 18px;
+      font-size: 1.75rem;
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: -0.01em;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    .card-btn-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      align-self: flex-start;
+      transition: all 0.25s ease;
+    }
+
+    .action-card:hover .card-btn-inline {
+      background: var(--card-color, #38bdf8);
+      color: #040812;
+      box-shadow: 0 0 20px var(--card-glow, rgba(56, 189, 248, 0.5));
+    }
+
+    /* Auto Return Countdown Bar */
+    .menu-footer-bar {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .timer-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 9px 18px;
+      border-radius: 30px;
+      backdrop-filter: blur(10px);
+    }
+
+    .timer-svg {
+      width: 26px;
+      height: 26px;
+      transform: rotate(-90deg);
+    }
+
+    .timer-circle-bg {
+      stroke: rgba(255, 255, 255, 0.15);
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .timer-circle-prog {
+      stroke: #38bdf8;
+      stroke-width: 3;
+      stroke-linecap: round;
+      fill: none;
+      stroke-dasharray: 75.4;
+      stroke-dashoffset: 0;
+      transition: stroke-dashoffset 1s linear;
+    }
+
+    .timer-text {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+    }
+
+    .timer-text strong {
+      color: #38bdf8;
+      font-family: monospace;
+      font-size: 0.95rem;
+    }
+
+    .back-to-splash-btn {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-decoration: underline;
+      transition: color 0.2s ease;
+    }
+
+    .back-to-splash-btn:hover {
+      color: #ffffff;
+    }
+
+    /* Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(16px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: #0f172a;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      max-width: 680px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 30px rgba(56, 189, 248, 0.2);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.open .modal-box {
+      transform: translateY(0);
+    }
+
+    .modal-header {
+      padding: 20px 28px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .modal-header-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .modal-header-icon {
+      font-size: 1.5rem;
+    }
+
+    .modal-header-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .modal-close-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #94a3b8;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      transition: all 0.2s ease;
+    }
+
+    .modal-close-btn:hover {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border-color: #ef4444;
+    }
+
+    .modal-body {
+      padding: 24px 28px;
+      color: #cbd5e1;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      overflow-y: auto;
+    }
+
+    .desc-section {
+      margin-bottom: 20px;
+    }
+
+    .desc-section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #7dd3fc;
+      margin-bottom: 6px;
+    }
+
+    .desc-card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .desc-mini-card {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      padding: 12px 14px;
+    }
+
+    .desc-mini-title {
+      font-weight: 600;
+      color: #fff;
+      font-size: 0.88rem;
+      margin-bottom: 3px;
+    }
+
+    .desc-mini-text {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .modal-footer {
+      padding: 16px 28px 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.95);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .btn-secondary {
+      padding: 9px 20px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 0.88rem;
+    }
+
+    .btn-primary-action {
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      border: none;
+      color: #fff;
+      padding: 9px 20px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+
+    /* Modal Viewer Khusus Website SIBENKA */
+    .modal-box-website {
+      background: #090d16;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 20px;
+      width: 96vw;
+      max-width: 1440px;
+      height: 92vh;
+      max-height: 94vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.25);
+      transform: translateY(20px);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .modal-backdrop.open .modal-box-website {
+      transform: translateY(0);
+    }
+
+    .website-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .website-action-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 15px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      white-space: nowrap;
+    }
+
+    .website-action-pill.btn-refresh {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e2e8f0;
+    }
+
+    .website-action-pill.btn-refresh:hover {
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+    }
+
+    .website-action-pill.btn-external {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid rgba(56, 189, 248, 0.35);
+      color: #7dd3fc;
+    }
+
+    .website-action-pill.btn-external:hover {
+      background: rgba(56, 189, 248, 0.28);
+      color: #fff;
+    }
+
+    .website-iframe-wrapper {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      position: relative;
+      background: #020617;
+      display: flex;
+    }
+
+    .website-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      background: #ffffff;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 768px) {
+      .menu-actions-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+      .desc-card-grid {
+        grid-template-columns: 1fr;
+      }
+      .menu-title {
+        font-size: 2.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       LAYER ANIMASI VIDEO PENUH (GOOGLE DRIVE)
+       ============================================================ -->
+  <main id="video-splash-screen">
+    <video 
+      id="splash-video" 
+      class="fullscreen-video" 
+      src="video/splash_video.mp4" 
+      autoplay 
+      loop 
+      playsinline
+    ></video>
+    
+    <div class="video-ambient-overlay"></div>
+  </main>
+
+
+  <!-- ============================================================
+       LAYER 2: HALAMAN MENU UTAMA (FUTURISTIK DENGAN 2 BUTTON)
+       ============================================================ -->
+  <section id="menu-screen">
+    <div class="menu-content">
+      <div class="menu-header">
+        <div class="menu-badge">
+          ✨ Projek Kepemimpinan • PPG Calon Guru
+        </div>
+        <h1 class="menu-title">SISTEM SIBENKA</h1>
+        <p class="menu-subtitle">
+          Selamat datang di pusat informasi dan layanan Sistem Sibenka. Silakan pilih menu di bawah ini:
+        </p>
+      </div>
+
+      <!-- 2 Main Action Cards -->
+      <div class="menu-actions-grid">
+        <!-- Card 1: DOKUMEN PERANCANGAN SIBENKA -->
+        <div class="action-card card-indigo" onclick="bukaDokumenPerancangan()">
+          <div>
+            <div class="card-icon-wrapper" style="background: #ffffff; border: 2px solid rgba(129, 140, 248, 0.5); padding: 7px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(129, 140, 248, 0.3);">
+              <svg viewBox="0 0 48 48" style="width: 100%; height: 100%; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M30 4H14C11.79 4 10 5.79 10 8V40C10 42.21 11.79 44 14 44H34C36.21 44 38 42.21 38 40V12L30 4Z" fill="#4285F4"/>
+                <path d="M30 4V12H38L30 4Z" fill="#A1C2FA"/>
+                <rect x="16" y="20" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/>
+                <rect x="16" y="26" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/>
+                <rect x="16" y="32" width="10" height="2.5" rx="1.25" fill="#FFFFFF"/>
+              </svg>
+            </div>
+            <h2 class="card-title">DOKUMEN PERANCANGAN SIBENKA</h2>
+            <p class="card-desc">
+              Menu ini memuat dokumen resmi perancangan sistem SIBENKA yang mencakup latar belakang, analisis kebutuhan bengkel, alur sirkulasi alat, dan spesifikasi teknis proyek di SMK Negeri 3 Yogyakarta.
+            </p>
+          </div>
+          <div class="card-btn-inline">
+            <span>Buka Dokumen</span>
+            <span style="font-size: 1.1rem;">↗</span>
+          </div>
+        </div>
+
+        <!-- Card 2: Sibenka -->
+        <div class="action-card card-blue" onclick="bukaWebsiteSibenka()">
+          <div>
+            <div class="card-icon-wrapper" style="background: #ffffff; border: 2px solid rgba(56, 189, 248, 0.5); padding: 6px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.3);">
+              <img src="images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 100%; height: 100%; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+            </div>
+            <h2 class="card-title">SIBENKA</h2>
+            <p class="card-desc">
+              Sistem Inventaris Bengkel SKAGATA (SIBENKA) adalah solusi berbasis web untuk mengatasi pengelolaan manual di SMK Negeri 3 Yogyakarta. Sistem ini mencegah kesalahan pencatatan, kehilangan dokumen, duplikasi data, serta kesulitan penelusuran riwayat peminjaman dan pengembalian alat bengkel yang sebelumnya menggunakan buku besar dan formulir kertas.
+            </p>
+          </div>
+          <div class="card-btn-inline">
+            <span>Kunjungi Website</span>
+            <span style="font-size: 1.1rem;">→</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Countdown Timer 30 Detik -->
+      <div class="menu-footer-bar">
+        <div class="timer-container" id="timer-box">
+          <svg class="timer-svg" viewBox="0 0 28 28">
+            <circle class="timer-circle-bg" cx="14" cy="14" r="12"></circle>
+            <circle class="timer-circle-prog" id="timer-progress" cx="14" cy="14" r="12"></circle>
+          </svg>
+          <span class="timer-text">
+            Otomatis kembali ke video dalam <strong id="timer-counter">30</strong> detik jika tidak memilih
+          </span>
+        </div>
+
+        <button class="back-to-splash-btn" onclick="backToSplash()">
+          ← Kembali ke Video Sekarang
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============================================================
+       MODAL 1: DESKRIPSI SISTEM (DARI DATABASE)
+       ============================================================ -->
+  <div class="modal-backdrop" id="modal-deskripsi" onclick="closeModalOnBackdrop(event)">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon">📑</div>
+          <div class="modal-header-title">Deskripsi SISTEM SIBENKA</div>
+        </div>
+        <button class="modal-close-btn" onclick="closeDeskripsiModal()" title="Tutup Modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div class="desc-section">
+          <div class="desc-section-title">📌 Mengenai Sistem Sibenka</div>
+          <p>
+            Sibenka merupakan inisiatif sistem digital inovatif yang dikembangkan sebagai bagian dari Projek Kepemimpinan mahasiswa Pendidikan Profesi Guru (PPG). Sistem ini dirancang untuk memfasilitasi pendataan, kolaborasi, dan visualisasi capaian pembelajaran serta kepemimpinan di lingkungan pendidikan.
+          </p>
+        </div>
+
+        <div class="desc-section">
+          <div class="desc-section-title">🎯 Tujuan & Urgensi Proyek</div>
+          <p>
+            Proyek ini bertujuan mengintegrasikan kepemimpinan transformasional dengan teknologi tepat guna. Dengan Sibenka, seluruh proses pemantauan, koordinasi tim, dan publikasi hasil proyek dapat diakses secara transparan, terstruktur, dan efisien oleh pemangku kepentingan maupun masyarakat luas.
+          </p>
+        </div>
+
+        <div class="desc-section">
+          <div class="desc-section-title">⭐ Fitur-Fitur Unggulan</div>
+          <div class="desc-card-grid">
+                          <div class="desc-mini-card">
+                <div class="desc-mini-title">⚡ Antarmuka Interaktif</div>
+                <div class="desc-mini-text">Desain modern, responsif, dan mudah dioperasikan di semua perangkat.</div>
+              </div>
+                          <div class="desc-mini-card">
+                <div class="desc-mini-title">📊 Visualisasi Dokumentasi</div>
+                <div class="desc-mini-text">Galeri foto dan video aktivitas aksi nyata yang terarsip secara sistematis.</div>
+              </div>
+                          <div class="desc-mini-card">
+                <div class="desc-mini-title">🤝 Ruang Kolaborasi</div>
+                <div class="desc-mini-text">Wadah sinergi antarmahasiswa PPG, guru pamong, dan sekolah mitra.</div>
+              </div>
+                          <div class="desc-mini-card">
+                <div class="desc-mini-title">🔒 Terintegrasi Cloud</div>
+                <div class="desc-mini-text">Akses penyimpanan awan terintegrasi untuk stabilitas data jangka panjang.</div>
+              </div>
+                      </div>
+        </div>
+
+        <div class="desc-section" style="margin-top: 18px;">
+          <div class="desc-section-title">📍 Sumber Dokumentasi & Berkas</div>
+          <p style="font-size: 0.88rem; color: #94a3b8;">
+            Tersimpan di tautan resmi proyek:
+            <br>
+            <a href="https://sibenka-skagata.onrender.com" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline; word-break: break-all;">
+              https://sibenka-skagata.onrender.com
+            </a>
+          </p>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeDeskripsiModal()">Tutup</button>
+        <button class="btn-primary-action" onclick="closeDeskripsiModal(); bukaWebsiteSibenka();">Lanjut ke Website →</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       MODAL 2: VIEWER LIVE WEBSITE SIBENKA (DALAM HALAMAN YANG SAMA)
+       ============================================================ -->
+  <div class="modal-backdrop" id="modal-website" onclick="closeWebsiteModalOnBackdrop(event)">
+    <div class="modal-box-website">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon" style="display: flex; align-items: center;">
+            <img src="images/sibenka_logo.png" alt="Logo SIBENKA" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+          </div>
+          <span class="modal-header-title">SIBENKA - SMKN 3 Yogyakarta</span>
+        </div>
+
+        <div class="website-header-actions">
+          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="website-action-pill btn-external" title="Buka di Tab Baru">
+            <span>↗</span>
+            <span>Tab Baru</span>
+          </a>
+          <button class="modal-close-btn" onclick="closeWebsiteModal()" title="Tutup">&times;</button>
+        </div>
+      </div>
+
+      <div class="website-iframe-wrapper">
+        <div id="iframe-loading-spinner" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0b1120; z-index: 5; color: #94a3b8; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Memuat SIBENKA...</div>
+        </div>
+
+        <iframe 
+          id="website-iframe"
+          class="website-iframe"
+          src="about:blank"
+          title="Login Sibenka SKAGATA"
+          allow="fullscreen; clipboard-read; clipboard-write; geolocation"
+          onload="hideIframeSpinner()"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
+       LOGIKA JAVASCRIPT: VIDEO SPLASH & MENU PORTAL
+       ============================================================ -->
+  <script>
+    const videoSplashScreen = document.getElementById('video-splash-screen');
+    const splashVideo = document.getElementById('splash-video');
+    const menuScreen = document.getElementById('menu-screen');
+    const timerCounterEl = document.getElementById('timer-counter');
+    const timerProgressEl = document.getElementById('timer-progress');
+    const modalDeskripsi = document.getElementById('modal-deskripsi');
+    const modalWebsite = document.getElementById('modal-website');
+    const websiteIframe = document.getElementById('website-iframe');
+
+    const SIBENKA_EMBED_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost') 
+      ? "/sibenka-frame" 
+      : "https://sibenka-skagata.onrender.com/login";
+    const SIBENKA_EXTERNAL_URL = 'https://sibenka-skagata.onrender.com/login';
+    const DOKUMEN_PERANCANGAN_URL = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing';
+
+    function bukaDokumenPerancangan() {
+      window.open(DOKUMEN_PERANCANGAN_URL, '_blank', 'noopener,noreferrer');
+    }
+
+    let isMenuOpen = false;
+    let isVideoPlaying = false;
+
+    // Timeout Pengaturan dari Database (default 30 Detik)
+    const IDLE_TIMEOUT_SECONDS = 30;
+    const CIRCLE_CIRCUMFERENCE = 75.4; // 2 * PI * 12
+    let secondsRemaining = IDLE_TIMEOUT_SECONDS;
+    let menuTimerInterval = null;
+
+    function init() {
+      // Inisialisasi video playback
+      initVideoPlayback();
+
+      // Keyboard Event: Tekan ENTER untuk Masuk ke Menu, ESC untuk menutup modal/kembali
+      window.addEventListener('keydown', handleKeyNavigation);
+
+      // Event listener user interaction di menu untuk reset timer
+      ['mousemove', 'touchstart', 'scroll'].forEach(evt => {
+        menuScreen.addEventListener(evt, handleUserActivityOnMenu, { passive: true });
+      });
+    }
+
+    // ============================================================
+    // PEMUTARAN VIDEO & SUARA (ANTI-JEDA / BULLETPROOF PLAYBACK)
+    // ============================================================
+    function initVideoPlayback() {
+      if (!splashVideo) return;
+
+      splashVideo.volume = 1.0;
+      splashVideo.muted = false;
+
+      // Fungsi untuk mengaktifkan suara saat ada interaksi fisik pengguna
+      const enableAudio = () => {
+        if (!splashVideo) return;
+        if (splashVideo.muted) {
+          splashVideo.muted = false;
+          splashVideo.volume = 1.0;
+          splashVideo.play().catch(err => {
+            console.warn('Browser blocked audio playback:', err);
+            // Jika browser menolak audio sebelum interaksi penuh, pertahankan pemutaran
+            splashVideo.muted = true;
+            splashVideo.play().catch(() => {});
+          });
+        }
+      };
+
+      // Dengarkan interaksi fisik pengguna yang sah (BUKAN mousemove agar tidak dijeda browser)
+      ['pointerdown', 'keydown', 'click', 'touchstart'].forEach(evt => {
+        window.addEventListener(evt, enableAudio, { passive: true });
+      });
+
+      // PENGAMAN 1: Cegah video terhenti sendiri (auto-resume jika dijeda saat splash aktif)
+      splashVideo.addEventListener('pause', () => {
+        if (!isMenuOpen) {
+          setTimeout(() => {
+            if (!isMenuOpen && splashVideo.paused) {
+              splashVideo.play().catch(() => {
+                splashVideo.muted = true;
+                splashVideo.play().catch(() => {});
+              });
+            }
+          }, 30);
+        }
+      });
+
+      // PENGAMAN 2: Pastikan looping mulus tanpa macet di akhir durasi video
+      splashVideo.addEventListener('ended', () => {
+        if (!isMenuOpen) {
+          splashVideo.currentTime = 0;
+          splashVideo.play().catch(() => {});
+        }
+      });
+
+      // Mulai putar video saat halaman dimuat
+      const playPromise = splashVideo.play();
+      if (playPromise !== undefined) {
+        playPromise.then(() => {
+          isVideoPlaying = true;
+        }).catch(() => {
+          // Jika browser menolak autoplay dengan audio di awal,
+          // putar dulu dalam mode muted agar video TIDAK macet / terjeda.
+          // Suara otomatis aktif saat user menekan keyboard / klik.
+          splashVideo.muted = true;
+          splashVideo.play().then(() => {
+            isVideoPlaying = true;
+          }).catch(e => console.log('Autoplay fallback error:', e));
+        });
+      }
+    }
+
+    // ============================================================
+    // NAVIGASI MENU & PERPINDAHAN LAYAR
+    // ============================================================
+    function openMenuScreen() {
+      if (isMenuOpen) return;
+
+      isMenuOpen = true;
+
+      // Jeda video saat menu terbuka
+      if (splashVideo) {
+        splashVideo.pause();
+      }
+
+      // Sembunyikan layar video
+      videoSplashScreen.classList.add('hidden');
+
+      // Tampilkan menu
+      menuScreen.classList.add('active');
+      startMenuCountdown();
+    }
+
+    function backToSplash() {
+      if (!isMenuOpen) return;
+
+      isMenuOpen = false;
+      stopMenuCountdown();
+
+      // Tutup modal jika terbuka
+      closeDeskripsiModal();
+      closeWebsiteModal();
+
+      // Sembunyikan menu
+      menuScreen.classList.remove('active');
+
+      // Tampilkan kembali video
+      videoSplashScreen.classList.remove('hidden');
+
+      // Lanjutkan pemutaran video dengan suara ON
+      if (splashVideo) {
+        splashVideo.muted = false;
+        splashVideo.volume = 1.0;
+        splashVideo.play().catch(e => {
+          console.log('Resume video error, fallback to muted:', e);
+          splashVideo.muted = true;
+          splashVideo.play().catch(() => {});
+        });
+      }
+    }
+
+    // ============================================================
+    // TIMER AUTO-RETURN KE VIDEO (30 DETIK)
+    // ============================================================
+    function startMenuCountdown() {
+      stopMenuCountdown();
+      secondsRemaining = IDLE_TIMEOUT_SECONDS;
+      updateTimerDisplay();
+
+      menuTimerInterval = setInterval(() => {
+        // Jangan kurangi timer jika user sedang aktif membaca modal deskripsi atau membuka website
+        if ((modalDeskripsi && modalDeskripsi.classList.contains('open')) ||
+            (modalWebsite && modalWebsite.classList.contains('open'))) {
+          return;
+        }
+
+        secondsRemaining--;
+        updateTimerDisplay();
+
+        if (secondsRemaining <= 0) {
+          stopMenuCountdown();
+          backToSplash();
+        }
+      }, 1000);
+    }
+
+    function stopMenuCountdown() {
+      if (menuTimerInterval) {
+        clearInterval(menuTimerInterval);
+        menuTimerInterval = null;
+      }
+    }
+
+    function resetMenuCountdown() {
+      if (isMenuOpen) {
+        secondsRemaining = IDLE_TIMEOUT_SECONDS;
+        updateTimerDisplay();
+      }
+    }
+
+    function updateTimerDisplay() {
+      if (timerCounterEl) {
+        timerCounterEl.textContent = secondsRemaining;
+      }
+
+      if (timerProgressEl) {
+        const progressFraction = (IDLE_TIMEOUT_SECONDS - secondsRemaining) / IDLE_TIMEOUT_SECONDS;
+        const offset = CIRCLE_CIRCUMFERENCE * progressFraction;
+        timerProgressEl.style.strokeDashoffset = offset;
+
+        if (secondsRemaining <= 10) {
+          timerProgressEl.style.stroke = '#f43f5e';
+        } else {
+          timerProgressEl.style.stroke = '#38bdf8';
+        }
+      }
+    }
+
+    let activityDebounce = null;
+    function handleUserActivityOnMenu() {
+      if (!isMenuOpen) return;
+      if (activityDebounce) return;
+      activityDebounce = setTimeout(() => {
+        if (secondsRemaining < (IDLE_TIMEOUT_SECONDS - 5)) {
+          resetMenuCountdown();
+        }
+        activityDebounce = null;
+      }, 800);
+    }
+
+    // ============================================================
+    // INTERAKSI KEYBOARD (ENTER & ESC)
+    // ============================================================
+    function handleKeyNavigation(e) {
+      if (e.key === 'Enter') {
+        if (!isMenuOpen) {
+          e.preventDefault();
+          openMenuScreen();
+        }
+      } else if (e.key === 'Escape') {
+        if (modalWebsite && modalWebsite.classList.contains('open')) {
+          closeWebsiteModal();
+        } else if (modalDeskripsi && modalDeskripsi.classList.contains('open')) {
+          closeDeskripsiModal();
+        } else if (isMenuOpen) {
+          backToSplash();
+        }
+      }
+    }
+
+    // ============================================================
+    // MODAL 1: DESKRIPSI SISTEM
+    // ============================================================
+    function openDeskripsiModal() {
+      modalDeskripsi.classList.add('open');
+    }
+
+    function closeDeskripsiModal() {
+      modalDeskripsi.classList.remove('open');
+      resetMenuCountdown();
+    }
+
+    function closeModalOnBackdrop(e) {
+      if (e.target === modalDeskripsi) {
+        closeDeskripsiModal();
+      }
+    }
+
+    // ============================================================
+    // MODAL 2: VIEWER WEBSITE SIBENKA (DI HALAMAN YANG SAMA)
+    // ============================================================
+    function bukaWebsiteSibenka() {
+      openWebsiteModal();
+    }
+
+    function hideIframeSpinner() {
+      const spinner = document.getElementById('iframe-loading-spinner');
+      if (spinner && websiteIframe && websiteIframe.src && websiteIframe.src !== 'about:blank') {
+        spinner.style.display = 'none';
+      }
+    }
+
+    function showIframeSpinner() {
+      const spinner = document.getElementById('iframe-loading-spinner');
+      if (spinner) {
+        spinner.style.display = 'flex';
+      }
+    }
+
+    function openWebsiteModal() {
+      if (!modalWebsite) return;
+      modalWebsite.classList.add('open');
+
+      if (websiteIframe && (!websiteIframe.src || websiteIframe.src === 'about:blank' || !websiteIframe.src.includes('sibenka-frame'))) {
+        showIframeSpinner();
+        websiteIframe.src = SIBENKA_EMBED_URL;
+      }
+    }
+
+    function closeWebsiteModal() {
+      if (!modalWebsite) return;
+      modalWebsite.classList.remove('open');
+      resetMenuCountdown();
+    }
+
+    function closeWebsiteModalOnBackdrop(e) {
+      if (e.target === modalWebsite) {
+        closeWebsiteModal();
+      }
+    }
+
+    function refreshWebsiteIframe() {
+      if (websiteIframe) {
+        showIframeSpinner();
+        websiteIframe.src = SIBENKA_EMBED_URL;
+      }
+    }
+
+    // Inisialisasi saat DOM siap
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
