@@ -3,7 +3,7 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>{{ $settings->app_title ?? 'SISTEM SIBENKA' }} - Projek Kepemimpinan</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -33,8 +33,10 @@
       font-family: 'Plus Jakarta Sans', sans-serif;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       overflow: hidden;
       user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
 
     /* ============================================================
@@ -45,12 +47,14 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       z-index: 10;
       background: #000000;
       overflow: hidden;
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: pointer;
       transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
@@ -89,6 +93,7 @@
       inset: 0;
       width: 100vw;
       height: 100vh;
+      height: 100dvh;
       z-index: 50;
       display: flex;
       flex-direction: column;
@@ -100,6 +105,10 @@
       pointer-events: none;
       transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
       padding: 24px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      box-sizing: border-box;
     }
 
     #menu-screen.active {
@@ -117,6 +126,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
+      margin: auto 0;
     }
 
     .menu-header {
@@ -587,16 +597,168 @@
       to { transform: rotate(360deg); }
     }
 
+    /* Floating Tap Hint di Splash Screen (Mobile Friendly) */
+    .splash-tap-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      padding: 10px 22px;
+      color: #f8fafc;
+      font-size: 0.88rem;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.35);
+      animation: pulseTap 2.4s infinite ease-in-out;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    @keyframes pulseTap {
+      0%, 100% {
+        transform: translateX(-50%) translateY(0) scale(1);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 25px rgba(56, 189, 248, 0.35);
+      }
+      50% {
+        transform: translateX(-50%) translateY(-5px) scale(1.03);
+        box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.55);
+      }
+    }
+
+    /* ============================================================
+       RESPONSIF SMARTPHONE / TABLET (HP FRIENDLY)
+       ============================================================ */
     @media (max-width: 768px) {
+      body {
+        height: 100dvh;
+      }
+      #video-splash-screen {
+        height: 100dvh;
+      }
+      .splash-tap-hint {
+        bottom: 24px;
+        padding: 8px 16px;
+        font-size: 0.8rem;
+        gap: 8px;
+        max-width: 90vw;
+      }
+      #menu-screen {
+        height: 100dvh;
+        padding: 24px 16px 36px;
+        justify-content: flex-start;
+      }
+      .menu-content {
+        margin: auto 0;
+        width: 100%;
+        max-width: 100%;
+      }
+      .menu-header {
+        margin-bottom: 20px;
+      }
+      .menu-badge {
+        font-size: 0.75rem;
+        padding: 4px 12px;
+        margin-bottom: 10px;
+      }
+      .menu-title {
+        font-size: 1.85rem;
+        margin-bottom: 8px;
+      }
+      .menu-subtitle {
+        font-size: 0.88rem;
+        line-height: 1.45;
+        padding: 0 4px;
+      }
       .menu-actions-grid {
         grid-template-columns: 1fr;
-        gap: 16px;
+        gap: 14px;
+        margin-bottom: 20px;
       }
       .desc-card-grid {
         grid-template-columns: 1fr;
       }
+      .action-card {
+        padding: 18px 16px;
+        border-radius: 16px;
+      }
+      .card-icon-wrapper {
+        width: 48px;
+        height: 48px;
+        border-radius: 12px;
+        margin-bottom: 12px;
+      }
+      .card-title {
+        font-size: 1.15rem;
+        margin-bottom: 6px;
+      }
+      .card-desc {
+        font-size: 0.82rem;
+        line-height: 1.45;
+        margin-bottom: 16px;
+      }
+      .card-btn-inline {
+        width: 100%;
+        justify-content: center;
+        padding: 10px 16px;
+        border-radius: 10px;
+        font-size: 0.85rem;
+      }
+      .menu-countdown-container {
+        padding: 6px 14px;
+        font-size: 0.78rem;
+        gap: 8px;
+      }
+      .modal-box-website {
+        width: 100vw;
+        height: 100dvh;
+        max-height: 100dvh;
+        border-radius: 0;
+        border: none;
+      }
+      .modal-box {
+        width: 95vw;
+        max-height: 88dvh;
+        border-radius: 16px;
+      }
+      .modal-header {
+        padding: 12px 16px;
+      }
+      .modal-header-title {
+        font-size: 0.95rem;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .modal-body {
+        padding: 16px 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
       .menu-title {
-        font-size: 2.2rem;
+        font-size: 1.6rem;
+      }
+      .menu-subtitle {
+        font-size: 0.82rem;
+      }
+      .card-title {
+        font-size: 1.05rem;
+      }
+      .card-desc {
+        font-size: 0.78rem;
+      }
+      .splash-tap-hint {
+        font-size: 0.75rem;
+        padding: 7px 14px;
       }
     }
   </style>
@@ -606,7 +768,7 @@
   <!-- ============================================================
        LAYER ANIMASI VIDEO PENUH (GOOGLE DRIVE)
        ============================================================ -->
-  <main id="video-splash-screen">
+  <main id="video-splash-screen" onclick="openMenuScreen()" role="button" tabindex="0" aria-label="Buka Menu Utama">
     <video 
       id="splash-video" 
       class="fullscreen-video" 
@@ -614,9 +776,16 @@
       autoplay 
       loop 
       playsinline
+      webkit-playsinline
+      muted
     ></video>
     
     <div class="video-ambient-overlay"></div>
+
+    <div class="splash-tap-hint">
+      <span class="tap-hint-icon">👆</span>
+      <span class="tap-hint-text">Ketuk Layar / Tekan ENTER untuk Menu</span>
+    </div>
   </main>
 
 
@@ -837,7 +1006,7 @@
       window.addEventListener('keydown', handleKeyNavigation);
 
       // Event listener user interaction di menu untuk reset timer
-      ['mousemove', 'touchstart', 'scroll'].forEach(evt => {
+      ['mousemove', 'touchstart', 'touchmove', 'scroll', 'click'].forEach(evt => {
         menuScreen.addEventListener(evt, handleUserActivityOnMenu, { passive: true });
       });
     }
@@ -928,6 +1097,7 @@
 
       // Tampilkan menu
       menuScreen.classList.add('active');
+      menuScreen.scrollTop = 0;
       startMenuCountdown();
     }
 
@@ -943,6 +1113,7 @@
 
       // Sembunyikan menu
       menuScreen.classList.remove('active');
+      menuScreen.scrollTop = 0;
 
       // Tampilkan kembali video
       videoSplashScreen.classList.remove('hidden');
