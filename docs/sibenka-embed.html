@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SIBENKA SKAGATA - SMK Negeri 3 Yogyakarta</title>
+  <link rel="icon" type="image/png" href="images/sibenka_logo.png">
+  <link rel="stylesheet" href="css/sibenka.css">
+  <style>
+    /* Custom enhancements for embedded viewing */
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #f8fafc;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+    }
+
+    .brand-left-bg {
+      background-image: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(30, 58, 138, 0.88)), 
+                        url('https://images.unsplash.com/photo-1580582932707-520aed937b7b?q=80&w=1000&auto=format&fit=crop');
+      background-size: cover;
+      background-position: center;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      transition: all 0.2s ease;
+    }
+
+    .feature-item:hover {
+      background: rgba(255, 255, 255, 0.14);
+      transform: translateX(4px);
+    }
+
+    .feature-icon-box {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: rgba(56, 189, 248, 0.25);
+      color: #38bdf8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .form-card-container {
+      max-width: 440px;
+      width: 100%;
+    }
+
+    .custom-input {
+      width: 100%;
+      border-radius: 12px;
+      border: 1.5px solid #cbd5e1;
+      padding: 11px 14px;
+      font-size: 0.9rem;
+      color: #1e293b;
+      outline: none;
+      transition: all 0.2s ease;
+      background: #ffffff;
+      box-sizing: border-box;
+    }
+
+    .custom-input:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12);
+    }
+
+    .custom-submit-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95rem;
+      padding: 12px 18px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .custom-submit-btn:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+      transform: translateY(-1px);
+    }
+
+    .custom-submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .external-launch-btn {
+      width: 100%;
+      background: #f1f5f9;
+      color: #334155;
+      font-weight: 600;
+      font-size: 0.88rem;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+
+    .external-launch-btn:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+      border-color: #cbd5e1;
+    }
+
+    /* Toast Notification */
+    #action-toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 999px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    #action-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+</head>
+<body class="antialiased">
+
+  <div class="min-h-screen flex flex-col lg:flex-row">
+
+    <!-- ============================================================
+         KIRI (DESKTOP): IDENTITAS & BRANDING RESMI SIBENKA SKAGATA
+         ============================================================ -->
+    <div class="hidden lg:flex lg:w-1/2 brand-left-bg items-center justify-center p-12 relative overflow-hidden">
+      <!-- Ambient Glow Behind Logo -->
+      <div style="position: absolute; width: 350px; height: 350px; background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(37, 99, 235, 0) 70%); top: 50%; left: 50%; transform: translate(-50%, -50%); pointer-events: none;"></div>
+
+      <div class="text-white text-center max-w-lg z-10">
+        <div style="background: rgba(255, 255, 255, 0.95); width: 110px; height: 110px; border-radius: 24px; margin: 0 auto 24px; padding: 12px; box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(56, 189, 248, 0.4); display: flex; align-items: center; justify-content: center;">
+          <img src="images/sibenka_logo.png" alt="Logo SMKN 3 Yogyakarta" style="width: 100%; height: 100%; object-fit: contain;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+        </div>
+
+        <div class="flex items-center justify-center gap-2.5 mb-3">
+          <span class="text-4xl lg:text-5xl font-black tracking-tight text-white drop-shadow-md">SIBENKA</span>
+          <span class="text-xs font-black px-2.5 py-1 rounded-md bg-white/20 text-white backdrop-blur-md border border-white/30 tracking-wider uppercase">
+            SKAGATA
+          </span>
+        </div>
+
+        <p class="text-lg font-bold text-sky-200 leading-snug drop-shadow-sm">
+          Sistem Inventaris &amp; Sirkulasi Bengkel
+        </p>
+        <p class="text-sm text-sky-300/80 mt-1 font-medium">
+          SMK Negeri 3 Yogyakarta
+        </p>
+
+        <!-- Feature Points -->
+        <div class="mt-8 text-left space-y-2.5">
+          <div class="feature-item">
+            <div class="feature-icon-box">⚡</div>
+            <div class="text-xs sm:text-sm text-white/95">
+              <strong>Digitalisasi Sirkulasi:</strong> Peminjaman dan pengembalian alat bengkel terdata otomatis secara presisi.
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon-box">📋</div>
+            <div class="text-xs sm:text-sm text-white/95">
+              <strong>Bebas Kehilangan Arsip:</strong> Menggantikan buku besar manual untuk mencegah duplikasi & kehilangan data.
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon-box">🛡️</div>
+            <div class="text-xs sm:text-sm text-white/95">
+              <strong>Keamanan Akun:</strong> Autentikasi aman untuk Teknisi Bengkel, Guru Pengampu, dan Siswa Peminjam.
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-8 text-xs text-slate-300/70">
+          Projek Kepemimpinan • PPG Calon Guru Gelombang 2
+        </div>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         KANAN: FORM LOGIN & INTEGRASI SISTEM SIBENKA
+         ============================================================ -->
+    <div class="w-full lg:w-1/2 flex items-center justify-center bg-white p-6 sm:p-12 z-10 overflow-y-auto">
+      <div class="form-card-container my-auto py-4">
+
+        <!-- Mobile Header Branding -->
+        <div class="lg:hidden flex flex-col items-center mb-6 text-center">
+          <div style="background: #ffffff; width: 68px; height: 68px; border-radius: 16px; padding: 8px; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); border: 1px solid #e2e8f0; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
+            <img src="images/sibenka_logo.png" alt="Logo SMKN 3 Yogyakarta" style="width: 100%; height: 100%; object-fit: contain;">
+          </div>
+          <div class="flex items-center gap-1.5">
+            <span class="text-2xl font-black text-gray-900 tracking-tight">SIBENKA</span>
+            <span class="text-[10px] font-extrabold px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 border border-blue-200">SKAGATA</span>
+          </div>
+          <p class="text-xs text-gray-600 font-semibold mt-1">Sistem Inventaris &amp; Sirkulasi Bengkel</p>
+          <p class="text-[11px] text-gray-400">SMK Negeri 3 Yogyakarta</p>
+        </div>
+
+        <!-- Header Form -->
+        <div class="mb-6 text-center lg:text-left">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 text-blue-800 border border-blue-200 text-xs font-semibold mb-2">
+            <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+            <span>Server SIBENKA Aktif</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-black text-gray-900 tracking-tight">Selamat Datang!</h2>
+          <p class="text-xs sm:text-sm text-gray-500 mt-1">Silakan masuk menggunakan akun SIBENKA yang terdaftar.</p>
+        </div>
+
+        <!-- Form Login Langsung ke Backend SIBENKA -->
+        <form id="sibenka-form" method="POST" action="https://sibenka-skagata.onrender.com/login" target="_blank" class="space-y-4">
+          <!-- Hidden Anti-CSRF Helper -->
+          <input type="hidden" name="from_portal" value="true">
+
+          <!-- Email Address -->
+          <div>
+            <label for="email" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+              Alamat Email <span class="text-red-500">*</span>
+            </label>
+            <input 
+              id="email" 
+              type="email" 
+              name="email" 
+              required 
+              autofocus
+              autocomplete="email" 
+              placeholder="nama@email.com"
+              class="custom-input"
+            >
+          </div>
+
+          <!-- Password -->
+          <div>
+            <label for="password" class="block text-xs font-bold text-gray-700 uppercase tracking-wider mb-1">
+              Password <span class="text-red-500">*</span>
+            </label>
+            <div style="position: relative;">
+              <input 
+                id="password" 
+                type="password" 
+                name="password" 
+                required
+                autocomplete="current-password" 
+                placeholder="Masukkan password Anda"
+                class="custom-input"
+                style="padding-right: 42px;"
+              >
+              <button 
+                type="button" 
+                id="toggle-password-btn"
+                style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; color: #94a3b8; display: flex; align-items: center;"
+                tabindex="-1" 
+                title="Lihat/Sembunyikan Password"
+              >
+                <svg id="eye-icon" style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Remember Me -->
+          <div class="flex items-center justify-between">
+            <label for="remember_me" class="inline-flex items-center cursor-pointer select-none">
+              <input id="remember_me" type="checkbox" name="remember" style="width: 16px; height: 16px; accent-color: #2563eb; cursor: pointer;">
+              <span class="ms-2 text-xs sm:text-sm text-gray-600 font-medium">Ingat Saya</span>
+            </label>
+          </div>
+
+          <!-- Tombol Submit -->
+          <div class="pt-1">
+            <button type="submit" id="submit-btn" class="custom-submit-btn">
+              <span id="submit-btn-text">Masuk ke Akun</span>
+              <svg id="submit-btn-icon" style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </button>
+          </div>
+        </form>
+
+        <!-- Pilihan Akses Cepat Langsung -->
+        <div class="mt-4 pt-4 border-t border-gray-100 flex flex-col gap-2.5">
+          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="external-launch-btn" title="Buka Sistem SIBENKA di Tab Baru">
+            <span>Buka Sistem SIBENKA di Tab Baru</span>
+            <span style="font-size: 1rem;">↗</span>
+          </a>
+        </div>
+
+        <!-- Link Pendaftaran Akun -->
+        <div class="mt-4 text-center text-xs sm:text-sm text-gray-500">
+          Belum punya akun peminjam?
+          <a href="https://sibenka-skagata.onrender.com/register" target="_blank" rel="noopener noreferrer" class="font-bold text-blue-600 hover:text-blue-700">
+            Daftar akun di sini
+          </a>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Toast Notifikasi Interaktif -->
+  <div id="action-toast">
+    <span style="font-size: 1.1rem;">🚀</span>
+    <span id="toast-text">Membuka SIBENKA SKAGATA...</span>
+  </div>
+
+  <script>
+    // Toggle Visibility Password
+    const passwordInput = document.getElementById('password');
+    const togglePasswordBtn = document.getElementById('toggle-password-btn');
+    const eyeIcon = document.getElementById('eye-icon');
+    let isPasswordVisible = false;
+
+    if (togglePasswordBtn && passwordInput) {
+      togglePasswordBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        isPasswordVisible = !isPasswordVisible;
+        passwordInput.type = isPasswordVisible ? 'text' : 'password';
+
+        if (isPasswordVisible) {
+          eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+          `;
+          togglePasswordBtn.style.color = '#2563eb';
+        } else {
+          eyeIcon.innerHTML = `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+          `;
+          togglePasswordBtn.style.color = '#94a3b8';
+        }
+      });
+    }
+
+    // Penanganan Submit Form
+    const sibenkaForm = document.getElementById('sibenka-form');
+    const toast = document.getElementById('action-toast');
+    const toastText = document.getElementById('toast-text');
+
+    function showToast(message) {
+      if (!toast) return;
+      toastText.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    if (sibenkaForm) {
+      sibenkaForm.addEventListener('submit', function() {
+        showToast('Menghubungkan ke server SIBENKA SKAGATA...');
+      });
+    }
+  </script>
+</body>
+</html>

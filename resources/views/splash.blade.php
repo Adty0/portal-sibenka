@@ -848,10 +848,10 @@
               Sistem Inventaris Bengkel SKAGATA (SIBENKA) adalah solusi berbasis web untuk mengatasi pengelolaan manual di SMK Negeri 3 Yogyakarta. Sistem ini mencegah kesalahan pencatatan, kehilangan dokumen, duplikasi data, serta kesulitan penelusuran riwayat peminjaman dan pengembalian alat bengkel yang sebelumnya menggunakan buku besar dan formulir kertas.
             </p>
           </div>
-          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="card-btn-inline" onclick="event.stopPropagation();">
-            <span>Kunjungi Website</span>
-            <span style="font-size: 1.1rem;">→</span>
-          </a>
+          <button type="button" class="card-btn-inline" onclick="event.stopPropagation(); bukaWebsiteSibenka();">
+            <span>Buka Website</span>
+            <span style="font-size: 1.1rem;">↗</span>
+          </button>
         </div>
       </div>
 
@@ -923,6 +923,47 @@
 
 
   <!-- ============================================================
+       MODAL: VIEWER WEBSITE SIBENKA (DI HALAMAN YANG SAMA)
+       ============================================================ -->
+  <div class="modal-backdrop" id="modal-sibenka" onclick="closeWebsiteModalOnBackdrop(event)">
+    <div class="modal-box-website">
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-header-icon" style="background: #ffffff; padding: 4px; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+            <img src="{{ asset('images/sibenka_logo.png') }}" alt="SIBENKA" style="width: 22px; height: 22px; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
+          </div>
+          <span class="modal-header-title">SIBENKA SKAGATA - SMKN 3 Yogyakarta</span>
+        </div>
+
+        <div class="website-header-actions">
+          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="website-action-pill btn-external" title="Buka di Tab Baru SIBENKA">
+            <span>↗</span>
+            <span>Tab Baru</span>
+          </a>
+          <button class="modal-close-btn" onclick="closeWebsiteModal()" title="Tutup">&times;</button>
+        </div>
+      </div>
+
+      <div class="website-iframe-wrapper">
+        <div id="sibenka-loading-spinner" style="position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #0b1120; z-index: 5; color: #94a3b8; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Memuat SIBENKA...</div>
+        </div>
+
+        <iframe 
+          id="sibenka-iframe"
+          class="website-iframe"
+          src="about:blank"
+          title="Website SIBENKA SKAGATA"
+          allow="fullscreen"
+          onload="hideSibenkaSpinner()"
+        ></iframe>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ============================================================
        LOGIKA JAVASCRIPT: VIDEO SPLASH & MENU PORTAL
        ============================================================ -->
   <script>
@@ -933,8 +974,11 @@
     const timerProgressEl = document.getElementById('timer-progress');
     const modalDokumen = document.getElementById('modal-dokumen');
     const docIframe = document.getElementById('doc-iframe');
+    const modalSibenka = document.getElementById('modal-sibenka');
+    const sibenkaIframe = document.getElementById('sibenka-iframe');
 
     const SIBENKA_EXTERNAL_URL = 'https://sibenka-skagata.onrender.com/login';
+    const SIBENKA_EMBED_URL = '{{ asset("sibenka-embed.html") }}';
     const DOKUMEN_PERANCANGAN_URL = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing';
     const DOKUMEN_PERANCANGAN_EMBED = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/preview?embedded=true';
 
@@ -974,7 +1018,38 @@
     }
 
     function bukaWebsiteSibenka() {
-      window.open(SIBENKA_EXTERNAL_URL, '_blank', 'noopener,noreferrer');
+      if (!modalSibenka) return;
+      modalSibenka.classList.add('open');
+      stopMenuCountdown();
+
+      if (sibenkaIframe && (!sibenkaIframe.src || sibenkaIframe.src === 'about:blank' || !sibenkaIframe.src.includes('sibenka-embed.html'))) {
+        showSibenkaSpinner();
+        sibenkaIframe.src = SIBENKA_EMBED_URL;
+      }
+    }
+
+    function closeWebsiteModal() {
+      if (!modalSibenka) return;
+      modalSibenka.classList.remove('open');
+      resetMenuCountdown();
+    }
+
+    function closeWebsiteModalOnBackdrop(e) {
+      if (e.target === modalSibenka) {
+        closeWebsiteModal();
+      }
+    }
+
+    function showSibenkaSpinner() {
+      const spinner = document.getElementById('sibenka-loading-spinner');
+      if (spinner) spinner.style.display = 'flex';
+    }
+
+    function hideSibenkaSpinner() {
+      const spinner = document.getElementById('sibenka-loading-spinner');
+      if (spinner && sibenkaIframe && sibenkaIframe.src && sibenkaIframe.src !== 'about:blank') {
+        spinner.style.display = 'none';
+      }
     }
 
     let isMenuOpen = false;
@@ -1097,6 +1172,7 @@
 
       // Tutup modal jika terbuka
       closeDokumenModal();
+      closeWebsiteModal();
 
       // Sembunyikan menu
       menuScreen.classList.remove('active');
@@ -1126,8 +1202,9 @@
       updateTimerDisplay();
 
       menuTimerInterval = setInterval(() => {
-        // Jangan kurangi timer jika user sedang aktif membaca dokumen perancangan
-        if (modalDokumen && modalDokumen.classList.contains('open')) {
+        // Jangan kurangi timer jika user sedang aktif membaca dokumen perancangan atau website sibenka
+        if ((modalDokumen && modalDokumen.classList.contains('open')) ||
+            (modalSibenka && modalSibenka.classList.contains('open'))) {
           return;
         }
 
@@ -1197,6 +1274,8 @@
       } else if (e.key === 'Escape') {
         if (modalDokumen && modalDokumen.classList.contains('open')) {
           closeDokumenModal();
+        } else if (modalSibenka && modalSibenka.classList.contains('open')) {
+          closeWebsiteModal();
         } else if (isMenuOpen) {
           backToSplash();
         }
