@@ -782,10 +782,6 @@
     
     <div class="video-ambient-overlay"></div>
 
-    <div class="splash-tap-hint">
-      <span class="tap-hint-icon">👆</span>
-      <span class="tap-hint-text">Ketuk Layar / Tekan ENTER untuk Menu</span>
-    </div>
   </main>
 
 
