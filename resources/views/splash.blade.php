@@ -270,9 +270,18 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       align-self: flex-start;
       transition: all 0.25s ease;
+      text-decoration: none;
+      cursor: pointer;
+      outline: none;
+      box-sizing: border-box;
     }
 
-    .action-card:hover .card-btn-inline {
+    button.card-btn-inline {
+      font-family: inherit;
+    }
+
+    .action-card:hover .card-btn-inline,
+    .card-btn-inline:hover {
       background: var(--card-color, #38bdf8);
       color: #040812;
       box-shadow: 0 0 20px var(--card-glow, rgba(56, 189, 248, 0.5));
@@ -513,7 +522,8 @@
       cursor: pointer;
     }
 
-    /* Modal Viewer Khusus Website SIBENKA */
+    /* Modal Viewer Dokumen Perancangan & Website SIBENKA */
+    .modal-box-document,
     .modal-box-website {
       background: #090d16;
       border: 1px solid rgba(255, 255, 255, 0.18);
@@ -525,11 +535,12 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(56, 189, 248, 0.25);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 40px rgba(129, 140, 248, 0.25);
       transform: translateY(20px);
       transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
+    .modal-backdrop.open .modal-box-document,
     .modal-backdrop.open .modal-box-website {
       transform: translateY(0);
     }
@@ -716,6 +727,7 @@
         font-size: 0.78rem;
         gap: 8px;
       }
+      .modal-box-document,
       .modal-box-website {
         width: 100vw;
         height: 100dvh;
@@ -819,13 +831,13 @@
               Menu ini memuat dokumen resmi perancangan sistem SIBENKA yang mencakup latar belakang, analisis kebutuhan bengkel, alur sirkulasi alat, dan spesifikasi teknis proyek di SMK Negeri 3 Yogyakarta.
             </p>
           </div>
-          <div class="card-btn-inline">
+          <button type="button" class="card-btn-inline" onclick="event.stopPropagation(); bukaDokumenPerancangan();">
             <span>Buka Dokumen</span>
             <span style="font-size: 1.1rem;">↗</span>
-          </div>
+          </button>
         </div>
 
-        <!-- Card 2: Sibenka -->
+        <!-- Card 2: SIBENKA -->
         <div class="action-card card-blue" onclick="bukaWebsiteSibenka()">
           <div>
             <div class="card-icon-wrapper" style="background: #ffffff; border: 2px solid rgba(56, 189, 248, 0.5); padding: 6px; box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 15px rgba(56, 189, 248, 0.3);">
@@ -836,10 +848,10 @@
               Sistem Inventaris Bengkel SKAGATA (SIBENKA) adalah solusi berbasis web untuk mengatasi pengelolaan manual di SMK Negeri 3 Yogyakarta. Sistem ini mencegah kesalahan pencatatan, kehilangan dokumen, duplikasi data, serta kesulitan penelusuran riwayat peminjaman dan pengembalian alat bengkel yang sebelumnya menggunakan buku besar dan formulir kertas.
             </p>
           </div>
-          <div class="card-btn-inline">
+          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="card-btn-inline" onclick="event.stopPropagation();">
             <span>Kunjungi Website</span>
             <span style="font-size: 1.1rem;">→</span>
-          </div>
+          </a>
         </div>
       </div>
 
@@ -864,100 +876,46 @@
 
 
   <!-- ============================================================
-       MODAL 1: DESKRIPSI SISTEM (DARI DATABASE)
+       MODAL: VIEWER DOKUMEN PERANCANGAN (DI HALAMAN YANG SAMA)
        ============================================================ -->
-  <div class="modal-backdrop" id="modal-deskripsi" onclick="closeModalOnBackdrop(event)">
-    <div class="modal-box">
+  <div class="modal-backdrop" id="modal-dokumen" onclick="closeDokumenModalOnBackdrop(event)">
+    <div class="modal-box-document">
       <div class="modal-header">
         <div class="modal-header-info">
-          <div class="modal-header-icon">📑</div>
-          <div class="modal-header-title">Deskripsi {{ $settings->app_title ?? 'Sistem Sibenka' }}</div>
-        </div>
-        <button class="modal-close-btn" onclick="closeDeskripsiModal()" title="Tutup Modal">&times;</button>
-      </div>
-
-      <div class="modal-body">
-        <div class="desc-section">
-          <div class="desc-section-title">📌 Mengenai Sistem Sibenka</div>
-          <p>
-            {!! nl2br(e($settings->about_system ?? 'Sistem informasi Projek Kepemimpinan.')) !!}
-          </p>
-        </div>
-
-        <div class="desc-section">
-          <div class="desc-section-title">🎯 Tujuan & Urgensi Proyek</div>
-          <p>
-            {!! nl2br(e($settings->urgency_text ?? 'Tujuan inovasi kepemimpinan transformasional.')) !!}
-          </p>
-        </div>
-
-        <div class="desc-section">
-          <div class="desc-section-title">⭐ Fitur-Fitur Unggulan</div>
-          <div class="desc-card-grid">
-            @foreach($features as $f)
-              <div class="desc-mini-card">
-                <div class="desc-mini-title">{{ $f->icon }} {{ $f->title }}</div>
-                <div class="desc-mini-text">{{ $f->description }}</div>
-              </div>
-            @endforeach
+          <div class="modal-header-icon" style="background: #ffffff; padding: 4px; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+            <svg viewBox="0 0 48 48" style="width: 22px; height: 22px; display: block;" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M30 4H14C11.79 4 10 5.79 10 8V40C10 42.21 11.79 44 14 44H34C36.21 44 38 42.21 38 40V12L30 4Z" fill="#4285F4"/>
+              <path d="M30 4V12H38L30 4Z" fill="#A1C2FA"/>
+              <rect x="16" y="20" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/>
+              <rect x="16" y="26" width="16" height="2.5" rx="1.25" fill="#FFFFFF"/>
+              <rect x="16" y="32" width="10" height="2.5" rx="1.25" fill="#FFFFFF"/>
+            </svg>
           </div>
-        </div>
-
-        <div class="desc-section" style="margin-top: 18px;">
-          <div class="desc-section-title">📍 Sumber Dokumentasi & Berkas</div>
-          <p style="font-size: 0.88rem; color: #94a3b8;">
-            Tersimpan di tautan resmi proyek:
-            <br>
-            <a href="{{ $settings->website_url }}" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: underline; word-break: break-all;">
-              {{ $settings->website_url }}
-            </a>
-          </p>
-        </div>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn-secondary" onclick="closeDeskripsiModal()">Tutup</button>
-        <button class="btn-primary-action" onclick="closeDeskripsiModal(); bukaWebsiteSibenka();">Lanjut ke Website →</button>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- ============================================================
-       MODAL 2: VIEWER LIVE WEBSITE SIBENKA (DALAM HALAMAN YANG SAMA)
-       ============================================================ -->
-  <div class="modal-backdrop" id="modal-website" onclick="closeWebsiteModalOnBackdrop(event)">
-    <div class="modal-box-website">
-      <div class="modal-header">
-        <div class="modal-header-info">
-          <div class="modal-header-icon" style="display: flex; align-items: center;">
-            <img src="{{ asset('images/sibenka_logo.png') }}" alt="Logo SIBENKA" style="width: 28px; height: 28px; object-fit: contain;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
-          </div>
-          <span class="modal-header-title">SIBENKA - SMKN 3 Yogyakarta</span>
+          <span class="modal-header-title">Dokumen Perancangan SIBENKA - SMKN 3 Yogyakarta</span>
         </div>
 
         <div class="website-header-actions">
-          <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="website-action-pill btn-external" title="Buka di Tab Baru">
+          <a href="https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="website-action-pill btn-external" title="Buka di Tab Baru Google Docs">
             <span>↗</span>
             <span>Tab Baru</span>
           </a>
-          <button class="modal-close-btn" onclick="closeWebsiteModal()" title="Tutup">&times;</button>
+          <button class="modal-close-btn" onclick="closeDokumenModal()" title="Tutup">&times;</button>
         </div>
       </div>
 
       <div class="website-iframe-wrapper">
-        <div id="iframe-loading-spinner" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0b1120; z-index: 5; color: #94a3b8; gap: 12px;">
-          <div style="width: 40px; height: 40px; border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Memuat SIBENKA...</div>
+        <div id="doc-loading-spinner" style="position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #0b1120; z-index: 5; color: #94a3b8; gap: 12px;">
+          <div style="width: 40px; height: 40px; border: 3px solid rgba(129, 140, 248, 0.2); border-top-color: #818cf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Memuat Dokumen Perancangan...</div>
         </div>
 
         <iframe 
-          id="website-iframe"
+          id="doc-iframe"
           class="website-iframe"
           src="about:blank"
-          title="Login Sibenka SKAGATA"
-          allow="fullscreen; clipboard-read; clipboard-write; geolocation"
-          onload="hideIframeSpinner()"
+          title="Dokumen Perancangan SIBENKA"
+          allow="fullscreen"
+          onload="hideDocSpinner()"
         ></iframe>
       </div>
     </div>
@@ -973,16 +931,50 @@
     const menuScreen = document.getElementById('menu-screen');
     const timerCounterEl = document.getElementById('timer-counter');
     const timerProgressEl = document.getElementById('timer-progress');
-    const modalDeskripsi = document.getElementById('modal-deskripsi');
-    const modalWebsite = document.getElementById('modal-website');
-    const websiteIframe = document.getElementById('website-iframe');
+    const modalDokumen = document.getElementById('modal-dokumen');
+    const docIframe = document.getElementById('doc-iframe');
 
-    const SIBENKA_EMBED_URL = "{{ url('/sibenka-frame') }}";
     const SIBENKA_EXTERNAL_URL = 'https://sibenka-skagata.onrender.com/login';
     const DOKUMEN_PERANCANGAN_URL = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing';
+    const DOKUMEN_PERANCANGAN_EMBED = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/preview?embedded=true';
 
     function bukaDokumenPerancangan() {
-      window.open(DOKUMEN_PERANCANGAN_URL, '_blank', 'noopener,noreferrer');
+      if (!modalDokumen) return;
+      modalDokumen.classList.add('open');
+      stopMenuCountdown();
+
+      if (docIframe && (!docIframe.src || docIframe.src === 'about:blank')) {
+        showDocSpinner();
+        docIframe.src = DOKUMEN_PERANCANGAN_EMBED;
+      }
+    }
+
+    function closeDokumenModal() {
+      if (!modalDokumen) return;
+      modalDokumen.classList.remove('open');
+      resetMenuCountdown();
+    }
+
+    function closeDokumenModalOnBackdrop(e) {
+      if (e.target === modalDokumen) {
+        closeDokumenModal();
+      }
+    }
+
+    function showDocSpinner() {
+      const spinner = document.getElementById('doc-loading-spinner');
+      if (spinner) spinner.style.display = 'flex';
+    }
+
+    function hideDocSpinner() {
+      const spinner = document.getElementById('doc-loading-spinner');
+      if (spinner && docIframe && docIframe.src && docIframe.src !== 'about:blank') {
+        spinner.style.display = 'none';
+      }
+    }
+
+    function bukaWebsiteSibenka() {
+      window.open(SIBENKA_EXTERNAL_URL, '_blank', 'noopener,noreferrer');
     }
 
     let isMenuOpen = false;
@@ -1104,8 +1096,7 @@
       stopMenuCountdown();
 
       // Tutup modal jika terbuka
-      closeDeskripsiModal();
-      closeWebsiteModal();
+      closeDokumenModal();
 
       // Sembunyikan menu
       menuScreen.classList.remove('active');
@@ -1135,9 +1126,8 @@
       updateTimerDisplay();
 
       menuTimerInterval = setInterval(() => {
-        // Jangan kurangi timer jika user sedang aktif membaca modal deskripsi atau membuka website
-        if ((modalDeskripsi && modalDeskripsi.classList.contains('open')) ||
-            (modalWebsite && modalWebsite.classList.contains('open'))) {
+        // Jangan kurangi timer jika user sedang aktif membaca dokumen perancangan
+        if (modalDokumen && modalDokumen.classList.contains('open')) {
           return;
         }
 
@@ -1205,81 +1195,11 @@
           openMenuScreen();
         }
       } else if (e.key === 'Escape') {
-        if (modalWebsite && modalWebsite.classList.contains('open')) {
-          closeWebsiteModal();
-        } else if (modalDeskripsi && modalDeskripsi.classList.contains('open')) {
-          closeDeskripsiModal();
+        if (modalDokumen && modalDokumen.classList.contains('open')) {
+          closeDokumenModal();
         } else if (isMenuOpen) {
           backToSplash();
         }
-      }
-    }
-
-    // ============================================================
-    // MODAL 1: DESKRIPSI SISTEM
-    // ============================================================
-    function openDeskripsiModal() {
-      modalDeskripsi.classList.add('open');
-    }
-
-    function closeDeskripsiModal() {
-      modalDeskripsi.classList.remove('open');
-      resetMenuCountdown();
-    }
-
-    function closeModalOnBackdrop(e) {
-      if (e.target === modalDeskripsi) {
-        closeDeskripsiModal();
-      }
-    }
-
-    // ============================================================
-    // MODAL 2: VIEWER WEBSITE SIBENKA (DI HALAMAN YANG SAMA)
-    // ============================================================
-    function bukaWebsiteSibenka() {
-      openWebsiteModal();
-    }
-
-    function hideIframeSpinner() {
-      const spinner = document.getElementById('iframe-loading-spinner');
-      if (spinner && websiteIframe && websiteIframe.src && websiteIframe.src !== 'about:blank') {
-        spinner.style.display = 'none';
-      }
-    }
-
-    function showIframeSpinner() {
-      const spinner = document.getElementById('iframe-loading-spinner');
-      if (spinner) {
-        spinner.style.display = 'flex';
-      }
-    }
-
-    function openWebsiteModal() {
-      if (!modalWebsite) return;
-      modalWebsite.classList.add('open');
-
-      if (websiteIframe && (!websiteIframe.src || websiteIframe.src === 'about:blank' || !websiteIframe.src.includes('sibenka-frame'))) {
-        showIframeSpinner();
-        websiteIframe.src = SIBENKA_EMBED_URL;
-      }
-    }
-
-    function closeWebsiteModal() {
-      if (!modalWebsite) return;
-      modalWebsite.classList.remove('open');
-      resetMenuCountdown();
-    }
-
-    function closeWebsiteModalOnBackdrop(e) {
-      if (e.target === modalWebsite) {
-        closeWebsiteModal();
-      }
-    }
-
-    function refreshWebsiteIframe() {
-      if (websiteIframe) {
-        showIframeSpinner();
-        websiteIframe.src = SIBENKA_EMBED_URL;
       }
     }
 
