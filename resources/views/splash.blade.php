@@ -849,7 +849,7 @@
             </p>
           </div>
           <button type="button" class="card-btn-inline" onclick="event.stopPropagation(); bukaWebsiteSibenka();">
-            <span>Buka Website</span>
+            <span>Kunjungi Website</span>
             <span style="font-size: 1.1rem;">↗</span>
           </button>
         </div>
@@ -932,10 +932,17 @@
           <div class="modal-header-icon" style="background: #ffffff; padding: 4px; border-radius: 8px; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
             <img src="{{ asset('images/sibenka_logo.png') }}" alt="SIBENKA" style="width: 22px; height: 22px; object-fit: contain; display: block;" onerror="this.onerror=null; this.src='images/sibenka_logo.png';">
           </div>
-          <span class="modal-header-title">SIBENKA SKAGATA - SMKN 3 Yogyakarta</span>
+          <div>
+            <div class="modal-header-title">SIBENKA SKAGATA - SMKN 3 Yogyakarta</div>
+            <div style="font-size: 0.72rem; color: #7dd3fc; font-weight: 500; font-family: monospace;">https://sibenka-skagata.onrender.com/login</div>
+          </div>
         </div>
 
         <div class="website-header-actions">
+          <button class="website-action-pill btn-refresh" onclick="refreshSibenkaIframe()" title="Muat Ulang Halaman">
+            <span>↻</span>
+            <span>Muat Ulang</span>
+          </button>
           <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" class="website-action-pill btn-external" title="Buka di Tab Baru SIBENKA">
             <span>↗</span>
             <span>Tab Baru</span>
@@ -947,17 +954,29 @@
       <div class="website-iframe-wrapper">
         <div id="sibenka-loading-spinner" style="position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; background: #0b1120; z-index: 5; color: #94a3b8; gap: 12px;">
           <div style="width: 40px; height: 40px; border: 3px solid rgba(56, 189, 248, 0.2); border-top-color: #38bdf8; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
-          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Memuat SIBENKA...</div>
+          <div style="font-size: 0.88rem; font-weight: 500; color: #cbd5e1;">Menghubungkan ke https://sibenka-skagata.onrender.com/login...</div>
         </div>
 
         <iframe 
           id="sibenka-iframe"
           class="website-iframe"
           src="about:blank"
-          title="Website SIBENKA SKAGATA"
-          allow="fullscreen"
+          title="Halaman Asli SIBENKA SKAGATA"
+          allow="fullscreen; clipboard-read; clipboard-write;"
           onload="hideSibenkaSpinner()"
         ></iframe>
+      </div>
+
+      <!-- Bilah Informasi Navigasi Langsung -->
+      <div style="padding: 8px 20px; background: rgba(15, 23, 42, 0.98); border-top: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: space-between; font-size: 0.8rem; color: #94a3b8; flex-wrap: wrap; gap: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="width: 8px; height: 8px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+          <span>Halaman Asli: <strong style="color: #e2e8f0;">https://sibenka-skagata.onrender.com/login</strong></span>
+        </div>
+        <a href="https://sibenka-skagata.onrender.com/login" target="_blank" rel="noopener noreferrer" style="color: #38bdf8; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 4px;">
+          <span>Buka di Layar Penuh / Tab Baru</span>
+          <span>↗</span>
+        </a>
       </div>
     </div>
   </div>
@@ -978,7 +997,7 @@
     const sibenkaIframe = document.getElementById('sibenka-iframe');
 
     const SIBENKA_EXTERNAL_URL = 'https://sibenka-skagata.onrender.com/login';
-    const SIBENKA_EMBED_URL = '{{ asset("sibenka-embed.html") }}';
+    const SIBENKA_EMBED_URL = 'https://sibenka-skagata.onrender.com/login';
     const DOKUMEN_PERANCANGAN_URL = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/edit?usp=sharing';
     const DOKUMEN_PERANCANGAN_EMBED = 'https://docs.google.com/document/d/1KYF85vYHHSbtpii6nArvjxIEWYdUqCBBxVW2GLn7PUk/preview?embedded=true';
 
@@ -1022,7 +1041,14 @@
       modalSibenka.classList.add('open');
       stopMenuCountdown();
 
-      if (sibenkaIframe && (!sibenkaIframe.src || sibenkaIframe.src === 'about:blank' || !sibenkaIframe.src.includes('sibenka-embed.html'))) {
+      if (sibenkaIframe && (!sibenkaIframe.src || sibenkaIframe.src === 'about:blank' || sibenkaIframe.src !== SIBENKA_EMBED_URL)) {
+        showSibenkaSpinner();
+        sibenkaIframe.src = SIBENKA_EMBED_URL;
+      }
+    }
+
+    function refreshSibenkaIframe() {
+      if (sibenkaIframe) {
         showSibenkaSpinner();
         sibenkaIframe.src = SIBENKA_EMBED_URL;
       }
@@ -1043,6 +1069,13 @@
     function showSibenkaSpinner() {
       const spinner = document.getElementById('sibenka-loading-spinner');
       if (spinner) spinner.style.display = 'flex';
+    }
+
+    function hideSibenkaSpinner() {
+      const spinner = document.getElementById('sibenka-loading-spinner');
+      if (spinner && sibenkaIframe && sibenkaIframe.src && sibenkaIframe.src !== 'about:blank') {
+        spinner.style.display = 'none';
+      }
     }
 
     function hideSibenkaSpinner() {
